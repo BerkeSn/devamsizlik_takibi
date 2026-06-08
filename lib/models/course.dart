@@ -1,18 +1,3 @@
-// ─────────────────────────────────────────────
-// course.dart  →  Uygulamanın tek veri modeli
-// ─────────────────────────────────────────────
-//
-// Bu dosyada ne var?
-//   • WeekDay   : Haftanın günlerini temsil eden enum
-//   • Course    : Bir dersin tüm bilgilerini tutan sınıf
-//   • AbsenceStatus : Devamsızlık durumunu anlatan enum
-//
-// Enum nedir?
-//   Sabit seçenekler listesi. Örneğin WeekDay.monday
-//   "pazartesi" anlamına gelir; sayı veya String yerine
-//   anlamlı isimler kullanmamızı sağlar.
-
-// ── Haftanın günleri ──────────────────────────
 enum WeekDay {
   monday,
   tuesday,
@@ -23,8 +8,6 @@ enum WeekDay {
   sunday,
 }
 
-// Enum değerlerine Türkçe isim eklemek için extension kullanıyoruz.
-// Extension: Var olan bir tipe yeni özellik/metot ekler.
 extension WeekDayExtension on WeekDay {
   String get turkishName {
     switch (this) {
@@ -65,7 +48,6 @@ extension WeekDayExtension on WeekDay {
   }
 }
 
-// ── Devamsızlık durumu ────────────────────────
 enum AbsenceStatus {
   safe,
   warning,
@@ -73,25 +55,17 @@ enum AbsenceStatus {
   critical
 }
 
-// ── Ders sınıfı ───────────────────────────────
 class Course {
-  // final: Bir kez atanır, sonradan değiştirilemez.
   final String
-      id; // Eşsiz kimlik (uuid paketi üretir)
-
-  // Bu alanlar değiştirilebilir (final değil):
-  String name; // Ders adı
-  int totalWeeks; // Kaç haftalık ders var?
-  int maxAbsences; // En fazla kaç kere devamsız kalınabilir?
-  int colorIndex; // Renk paletteki indeks (0-9)
-  WeekDay courseDay; // Dersin günü
+      id;
+  String name; 
+  int totalWeeks;
+  int maxAbsences; 
+  int colorIndex;
+  WeekDay courseDay;
   String
-      semester; // Hangi dönem? (ör. "Bahar 2025")
+      semester;
 
-  // attendanceMap: Her haftanın durumunu tutar.
-  //   Key   → hafta numarası (1, 2, 3 … totalWeeks)
-  //   Value → true = katıldım, false = gitmedim
-  //   Eğer key yoksa → henüz işaretlenmemiş
   Map<int, bool> attendanceMap;
 
   Course({
@@ -104,34 +78,29 @@ class Course {
     required this.semester,
     Map<int, bool>? attendanceMap,
   }) : attendanceMap = attendanceMap ?? {};
-  //    ↑ attendanceMap verilmezse boş Map başlatılır.
 
-  // ── Hesaplanan özellikler (getter) ──────────
-  // Getter: Parametre almadan bir değer hesaplayan özellik.
-
-  // Toplam devamsız olunan hafta sayısı
   int get totalAbsences => attendanceMap.values
       .where((attended) => !attended)
       .length;
 
-  // Toplam katılınan hafta sayısı
+
   int get totalAttended => attendanceMap.values
       .where((attended) => attended)
       .length;
 
-  // Kalan devamsızlık hakkı
+
   int get remainingAbsences =>
       maxAbsences - totalAbsences;
 
-  // Kaç hafta işaretlenmiş?
+
   int get markedWeeks => attendanceMap.length;
 
-  // Katılım yüzdesi (0.0 - 1.0 arası)
+
   double get attendanceRate => markedWeeks == 0
       ? 1.0
       : totalAttended / markedWeeks;
 
-  // Devamsızlık durumu
+
   AbsenceStatus get absenceStatus {
     if (remainingAbsences <= 0)
       return AbsenceStatus.critical;
@@ -142,10 +111,6 @@ class Course {
     return AbsenceStatus.safe;
   }
 
-  // ── JSON dönüşümleri (SharedPreferences için) ──
-  // SharedPreferences sadece String saklayabilir.
-  // Bu yüzden Course nesnesini JSON String'e çevirip saklıyoruz.
-
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -153,14 +118,12 @@ class Course {
         'maxAbsences': maxAbsences,
         'colorIndex': colorIndex,
         'courseDay':
-            courseDay.index, // enum → int
+            courseDay.index,
         'semester': semester,
-        // Map<int,bool> → Map<String,bool>  (JSON key'leri String olmak zorunda)
         'attendanceMap': attendanceMap.map(
             (k, v) => MapEntry(k.toString(), v)),
       };
 
-  // JSON'dan Course nesnesi üret (fabrika constructor)
   factory Course.fromJson(
           Map<String, dynamic> json) =>
       Course(
@@ -170,7 +133,7 @@ class Course {
         maxAbsences: json['maxAbsences'],
         colorIndex: json['colorIndex'] ?? 0,
         courseDay: WeekDay.values[
-            json['courseDay'] ?? 0], // int → enum
+            json['courseDay'] ?? 0],
         semester:
             json['semester'] ?? 'Bahar 2025',
         attendanceMap: (json['attendanceMap']

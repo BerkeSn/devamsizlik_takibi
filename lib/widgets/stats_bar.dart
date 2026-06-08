@@ -1,12 +1,3 @@
-// ─────────────────────────────────────────────
-// stats_bar.dart  →  Dönem istatistik özeti
-// ─────────────────────────────────────────────
-//
-// fl_chart paketi yok → saf Flutter widget'larıyla
-// basit ama bilgilendirici bir özet bar.
-//
-// 4 stat kutusu + renkli segment bar gösterir.
-
 import 'package:flutter/material.dart';
 
 import '../models/course.dart';
@@ -34,7 +25,6 @@ class StatsBar extends StatelessWidget {
         ? AppColors.darkBorder
         : AppColors.lightBorder;
 
-    // Durum sayıları
     int safe = 0,
         warning = 0,
         danger = 0,
@@ -56,14 +46,12 @@ class StatsBar extends StatelessWidget {
       }
     }
 
-    // Genel katılım yüzdesi
     final avgRate = courses.isEmpty
         ? 1.0
         : courses.fold<double>(0,
                 (s, c) => s + c.attendanceRate) /
             courses.length;
 
-    // En çok devamsız ders
     final mostAbsent = courses.isEmpty
         ? null
         : courses.reduce((a, b) =>
@@ -82,7 +70,6 @@ class StatsBar extends StatelessWidget {
         crossAxisAlignment:
             CrossAxisAlignment.start,
         children: [
-          // ── Başlık ───────────────────────────
           Row(
             children: [
               Text('Dönem Özeti',
@@ -101,7 +88,6 @@ class StatsBar extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // ── 4 stat kutusu ────────────────────
           Row(
             children: [
               _StatBox(
@@ -131,9 +117,6 @@ class StatsBar extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // ── Segment bar ───────────────────────
-          // Her durumun oranını yatay olarak gösterir.
-          // fl_chart yerine basit Row + Flexible tekniği.
           ClipRRect(
             borderRadius:
                 BorderRadius.circular(4),
@@ -158,7 +141,7 @@ class StatsBar extends StatelessWidget {
                         flex: critical,
                         color:
                             AppColors.critical),
-                  // Eğer hiçbir ders yoksa gri bar
+
                   if (safe +
                           warning +
                           danger +
@@ -178,7 +161,6 @@ class StatsBar extends StatelessWidget {
             ),
           ),
 
-          // ── En çok devamsız ders ─────────────
           if (mostAbsent != null &&
               mostAbsent.totalAbsences > 0) ...[
             const SizedBox(height: 10),
@@ -209,7 +191,6 @@ class StatsBar extends StatelessWidget {
   }
 }
 
-// ── Stat kutusu ───────────────────────────────
 class _StatBox extends StatelessWidget {
   final String label;
   final String value;
@@ -262,7 +243,6 @@ class _StatBox extends StatelessWidget {
   }
 }
 
-// ── Segment bar parçası ───────────────────────
 class _Segment extends StatelessWidget {
   final int flex;
   final Color color;

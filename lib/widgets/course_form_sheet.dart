@@ -5,8 +5,7 @@ import '../theme/app_theme.dart';
 
 class CourseFormSheet extends StatefulWidget {
   final String semester;
-  final Course?
-      existingCourse;
+  final Course? existingCourse;
 
   final Function(
     String name,
@@ -126,7 +125,6 @@ class _CourseFormSheetState
                     ),
                   ),
                 ),
-
                 Text(
                   isEdit
                       ? 'Dersi Düzenle'
@@ -141,7 +139,6 @@ class _CourseFormSheetState
                       theme.textTheme.bodySmall,
                 ),
                 const SizedBox(height: 24),
-
                 TextFormField(
                   controller: _nameCtrl,
                   decoration:
@@ -160,7 +157,6 @@ class _CourseFormSheetState
                       : null,
                 ),
                 const SizedBox(height: 20),
-
                 _Stepper(
                   label: 'Toplam Hafta',
                   sublabel:
@@ -173,7 +169,6 @@ class _CourseFormSheetState
                   isDark: isDark,
                 ),
                 const SizedBox(height: 16),
-
                 _Stepper(
                   label: 'Devamsızlık Hakkı',
                   sublabel:
@@ -186,7 +181,6 @@ class _CourseFormSheetState
                   isDark: isDark,
                 ),
                 const SizedBox(height: 24),
-
                 Text('Ders Günü',
                     style: theme
                         .textTheme.titleSmall),
@@ -241,7 +235,6 @@ class _CourseFormSheetState
                   }).toList(),
                 ),
                 const SizedBox(height: 24),
-
                 Text('Ders Rengi',
                     style: theme
                         .textTheme.titleSmall),
@@ -298,7 +291,6 @@ class _CourseFormSheetState
                   ),
                 ),
                 const SizedBox(height: 32),
-
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
@@ -398,7 +390,6 @@ class _Stepper extends StatelessWidget {
                 enabled: value > min,
                 onTap: () => onChanged(value - 1),
               ),
-
               SizedBox(
                 width: 40,
                 child: Text(
